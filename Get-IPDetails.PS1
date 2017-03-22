@@ -45,7 +45,7 @@ process {
     #$OutputObj | Add-Member -MemberType NoteProperty -Name MACAddress -Value $MACAddress            
     #$OutputObj 
    } 
-   $OutputObj | export-csv C:\etc\srv03s.csv -NoTypeInformation -Append
+   $OutputObj | export-csv C:\etc\AllServersDNS.csv -NoTypeInformation -Append
    $Report += $OutputObj        
   }            
  }
@@ -56,7 +56,7 @@ process {
 end {}
 }
 
-(Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' -and Name -Like 'ADMSRV*'}).name  | sort -Property $_.name | Get-IPDetails | ft -AutoSize
+(Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' -and Name -Like '*SRV*'}).name  | sort -Property $_.name | Get-IPDetails | ft -AutoSize
 
 #PS C:\etc\Scripts\Server> (Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' } -Properties OperatingSystem).name 
 #Get-IPDetails ssdsrv04
