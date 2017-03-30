@@ -21,13 +21,14 @@ Process {
             $disk = Get-WmiObject Win32_LogicalDisk -ComputerName $Server -Filter "DeviceID='D:'" | Select-Object Size,FreeSpace
             }
             Catch{}
-
-            
+ 
             $VMHost = Get-VMMServer ssdsrv15.ssd.com | Get-VM $server
+            $device=$vmhost.location.substring(0,2)
+            
             Try {
-            $hostdisk = Get-WmiObject Win32_LogicalDisk -ComputerName $vmhost.HostName -Filter "DeviceID='D:'" | Select-Object Size,FreeSpace
+            $hostdisk = Get-WmiObject Win32_LogicalDisk -ComputerName $vmhost.HostName -Filter "DeviceID='$device'" | Select-Object Size,FreeSpace
             }
-            Catch{"Oops.  Can't resolve the VMHost: $vmhost.hostanme"}
+            Catch{"Oops.  Can't resolve the VMHost"}
 
             $curobj = New-Object PSObject -Property ([ordered]@{
              Server = $Server
