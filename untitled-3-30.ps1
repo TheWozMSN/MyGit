@@ -1,8 +1,8 @@
 Begin {
     $Report = @()
     $ErrorActionPreference = "SilentlyContinue"
-    import-module virtualmachinemanager
-    #?? this nesx line.  Outside?
+    try { Import-Module virtualmachinemanager } catch { "Opps. Can't locate module. Exiting";exit}
+    #?? this nest line.  Outside?  Make this a function and pass the servers ????
     $Servers =(Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' -and Name -Like '*SRV03'}).name
     $ConvertToGB = (1024 * 1024 * 1024)
 }
