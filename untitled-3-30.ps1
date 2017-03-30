@@ -22,14 +22,14 @@ Process {
             }
             Catch{}
 
-            $curobj = New-Object PSObject -Property @{
+            $curobj = New-Object PSObject -Property ([ordered]@{
              Server = $Server
              "VM Capacity (GB)" = [Math]::round(($disk.Size / $ConvertToGB), 3)
              "VM FreeDisk (GB)" = [Math]::round(($disk.FreeSpace / $ConvertToGB), 3)
              Host = $VMHost.hostname
              "Host Capacity (GB)" = [Math]::round(($hostdisk.Size / $ConvertToGB), 3)
              "Host FreeDisk (GB)" = [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
-            }
+            }) # | Select-object Server, VM Capacity (GB), VM FreeDisk (GB), Host, Host Capacity (GB), Host FreeDisk (GB) 
              #$Server + "," + [Math]::round(($disk.Size / $ConvertToGB), 3) + "," + [Math]::round(($disk.FreeSpace / $ConvertToGB), 3) + "," + $vmhost.hostname + "," + [Math]::round(($hostdisk.Size / $ConvertToGB), 3) + "," + [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
         
             $Report += $curobj
