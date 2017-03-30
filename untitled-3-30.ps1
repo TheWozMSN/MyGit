@@ -1,10 +1,16 @@
+function Get-VmAndHostDisk {
+[CmdletBinding()]
+param(
+    [parameter(ValueFromPipeline=$true,Mandatory=$true,Position=0)]
+    [string[]]
+    $Servers
+)
+
 Begin {
     $reportFile = "c:\etc\SRV03-DiskFree.csv"
     $Report = @()
     $ErrorActionPreference = "SilentlyContinue"
     try { Import-Module virtualmachinemanager } catch { "Opps. Can't locate module. Exiting";exit}
-    #?? this nest line.  Outside?  Make this a function and pass the servers ????
-    $Servers =(Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' -and Name -Like '*SRV03'}).name
     $ConvertToGB = (1024 * 1024 * 1024)
 }
 
@@ -21,7 +27,7 @@ Process {
             Try {
             $hostdisk = Get-WmiObject Win32_LogicalDisk -ComputerName $vmhost.HostName -Filter "DeviceID='D:'" | Select-Object Size,FreeSpace
             }
-            Catch{}
+            Catch{"Oops.  Can't resolve the VMHost: $vmhost.hostanme"}
 
             $curobj = New-Object PSObject -Property ([ordered]@{
              Server = $Server
@@ -30,7 +36,7 @@ Process {
              Host = $VMHost.hostname
              "Host Capacity (GB)" = [Math]::round(($hostdisk.Size / $ConvertToGB), 3)
              "Host FreeDisk (GB)" = [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
-            }) # | Select-object Server, VM Capacity (GB), VM FreeDisk (GB), Host, Host Capacity (GB), Host FreeDisk (GB) 
+            }) 
              
         
             $Report += $curobj
@@ -42,3 +48,6 @@ End {
     $Report | Export-Csv -LiteralPath $reportFile -Force -NoTypeInformation
     invoke-item -LiteralPath $reportFile
 }
+}
+(Get-ADComputer -Filter { OperatingSystem -Like '*Windows Server*' -and Name -Like '*SRV03'}).name | Get-VmAndHostDisk
+
