@@ -30,7 +30,7 @@ Process {
              "Host Capacity (GB)" = [Math]::round(($hostdisk.Size / $ConvertToGB), 3)
              "Host FreeDisk (GB)" = [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
             }) # | Select-object Server, VM Capacity (GB), VM FreeDisk (GB), Host, Host Capacity (GB), Host FreeDisk (GB) 
-             #$Server + "," + [Math]::round(($disk.Size / $ConvertToGB), 3) + "," + [Math]::round(($disk.FreeSpace / $ConvertToGB), 3) + "," + $vmhost.hostname + "," + [Math]::round(($hostdisk.Size / $ConvertToGB), 3) + "," + [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
+             
         
             $Report += $curobj
             }
@@ -38,6 +38,6 @@ Process {
 
 End {
     # Export resulting report
-    $Report | Export-Csv -LiteralPath c:\etc\SRV03-DiskFree.csv -Force
+    $Report | Export-Csv -LiteralPath c:\etc\SRV03-DiskFree.csv -Force -NoTypeInformation
     invoke-item -LiteralPath c:\etc\SRV03-DiskFree.csv
 }
