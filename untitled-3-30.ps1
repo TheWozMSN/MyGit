@@ -1,4 +1,5 @@
 Begin {
+    $reportFile = "c:\etc\SRV03-DiskFree.csv"
     $Report = @()
     $ErrorActionPreference = "SilentlyContinue"
     try { Import-Module virtualmachinemanager } catch { "Opps. Can't locate module. Exiting";exit}
@@ -24,11 +25,11 @@ Process {
 
             $curobj = New-Object PSObject -Property ([ordered]@{
              Server = $Server
-             "VM Capacity (GB)" = [Math]::round(($disk.Size / $ConvertToGB), 3)
-             "VM FreeDisk (GB)" = [Math]::round(($disk.FreeSpace / $ConvertToGB), 3)
+             "VM Capacity (GB)" = [Math]::round(($disk.Size / $ConvertToGB), 2)
+             "VM FreeDisk (GB)" = [Math]::round(($disk.FreeSpace / $ConvertToGB), 2)
              Host = $VMHost.hostname
-             "Host Capacity (GB)" = [Math]::round(($hostdisk.Size / $ConvertToGB), 3)
-             "Host FreeDisk (GB)" = [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 3)
+             "Host Capacity (GB)" = [Math]::round(($hostdisk.Size / $ConvertToGB), 2)
+             "Host FreeDisk (GB)" = [Math]::round(($hostdisk.FreeSpace / $ConvertToGB), 2)
             }) # | Select-object Server, VM Capacity (GB), VM FreeDisk (GB), Host, Host Capacity (GB), Host FreeDisk (GB) 
              
         
@@ -38,6 +39,6 @@ Process {
 
 End {
     # Export resulting report
-    $Report | Export-Csv -LiteralPath c:\etc\SRV03-DiskFree.csv -Force -NoTypeInformation
-    invoke-item -LiteralPath c:\etc\SRV03-DiskFree.csv
+    $Report | Export-Csv -LiteralPath $reportFile -Force -NoTypeInformation
+    invoke-item -LiteralPath $reportFile
 }
