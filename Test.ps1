@@ -1,1 +1,1 @@
-White-Host "Helo World"
+White-Host "Hello World"
