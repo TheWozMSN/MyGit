@@ -1,1 +1,1 @@
-White-Host "Got It maybe"
+Write-Host "Got It maybe"
